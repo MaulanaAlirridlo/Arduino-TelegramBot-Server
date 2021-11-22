@@ -3,9 +3,9 @@ app = Flask(__name__)
 
 @app.route('/', methods=['POST'])
 def store():
-    txt = open("store.txt", "w+")
-    txt.write(request.form['value'])
+    txt = open("store.txt", "wb")
+    txt.write(request.data)
     return jsonify({'status' : 200})
 
 if __name__ == '__main__':
-    app.run(host="192.168.1.4", debug=True, port=8000)
+    app.run(host="192.168.1.8", debug=True, port=8000)
