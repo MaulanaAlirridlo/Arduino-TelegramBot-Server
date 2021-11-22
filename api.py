@@ -8,4 +8,4 @@ def store():
     return jsonify({'status' : 200})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8000)
+    app.run(host="192.168.1.4", debug=True, port=8000)

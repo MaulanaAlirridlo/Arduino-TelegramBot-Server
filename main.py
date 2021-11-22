@@ -4,8 +4,9 @@ import env
 # /start
 def start(update, context):
     update.message.reply_text("Selamat Datang \nSilahkan gunakan command di bawah : "+
-    "\n /start untuk memulai bot"+
+    "\n/start untuk memulai bot"+
     "\n/help untuk melihat command yang ada"+
+    "\n/kelembapan untuk mengecek kelembapan tanah"+
     "\nkirim gambar untuk mendeteksi kandungan unsur hara")
 
 
@@ -14,16 +15,21 @@ def help(update, context):
     update.message.reply_text("command yang tersedia adalah : "+
     "\n /start untuk memulai bot"+
     "\n/help untuk melihat command yang ada"+
+    "\n/kelembapan untuk mengecek kelembapan tanah"+
     "\nkirim gambar untuk mendeteksi kandungan unsur hara")
 
 def soilMoisture(update, context):
-    update.message.reply_text("kelembapan : ")
+    with open('store.txt') as txt:
+        content = txt.readlines()
+    for v in content:
+        update.message.reply_text("kelembapan : "+v+"%")
 
 # for handle a message
 def handleMessage(update, context):
     update.message.reply_text("Silahkan gunakan command di bawah : "+
     "\n /start untuk memulai bot"+
     "\n/help untuk melihat command yang ada"+
+    "\n/kelembapan untuk mengecek kelembapan tanah"+
     "\nkirim gambar untuk mendeteksi kandungan unsur hara")
 
 def handleImage(update, context):
@@ -60,3 +66,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
