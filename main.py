@@ -4,10 +4,13 @@ import cv2
 import math
 import pandas as pd
 import env
+from glcm import glcm
 
-df = pd.read_excel("hsv.xlsx")
+df = pd.read_excel("extraction.xlsx")
 
-x = np.array(df.iloc[:, 0:3])
+col = 23
+
+x = np.array(df.iloc[:, 0:col])
 y = np.array(df['Class'])
 
 def croppingImage(path):
@@ -35,20 +38,25 @@ def croppingImage(path):
     cv2.imwrite(path, result)
 
 
-def hsvExtraction(path):
+def imgExtraction(path):
     img = cv2.imread(path)
     hsvImg = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
     hue = hsvImg[:, :, 0].mean()
     saturation = hsvImg[:, :, 1].mean()
     value = hsvImg[:, :, 2].mean()
-    return [hue, saturation, value]
+    [g0, g45, g90, g135] = glcm(img)
+    return [hue, saturation, value, g0['asm'], g45['asm'], g90['asm'], g135['asm'], g0['kontras'],
+            g45['kontras'], g90['kontras'], g135['kontras'], g0['idm'], g45['idm'], g90['idm'],
+            g135['idm'], g0['entropi'], g45['entropi'], g90['entropi'], g135['entropi'], g0['korelasi'], 
+            g45['korelasi'], g90['korelasi'], g135['korelasi']]
 
 
-def predictKNN(k, attributes):
+def predictKNN(k, attributes) :
     ed = []
-    for v in x:
-        res = ((v[0]-attributes[0])**2) + \
-            ((v[1]-attributes[1])**2)+((v[2]-attributes[2])**2)
+    res = 0
+    for v in x :
+        for i in range(col) :
+            res += ((v[i]-attributes[i])**2)
         ed.append(math.sqrt(res))
     sortedK = [ed for y, ed in sorted(zip(ed, y))]
     return max(set(sortedK[:k]), key=sortedK[:k].count)
@@ -97,11 +105,11 @@ def handleImage(update, context):
     # croping
     croppingImage('image.jpeg')
 
-    # ekstraksi hsv
-    hsv = hsvExtraction('image.jpeg')
+    # ekstraksi gambar
+    img = imgExtraction('image.jpeg')
 
     # knn
-    hasil = predictKNN(3, hsv)
+    hasil = predictKNN(3, img)
 
     # send result
     update.message.reply_text("buah "+hasil)
