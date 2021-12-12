@@ -19,7 +19,7 @@ def croppingImage(path):
 
     # threshold on white
     # Define lower and uppper limits
-    lower = np.array([200, 200, 200])
+    lower = np.array([120, 120, 120])
     upper = np.array([255, 255, 255])
 
     # Create mask to only select black
@@ -58,7 +58,9 @@ def predictKNN(k, attributes) :
         for i in range(col) :
             res += ((v[i]-attributes[i])**2)
         ed.append(math.sqrt(res))
+        res = 0
     sortedK = [ed for y, ed in sorted(zip(ed, y))]
+    print(sortedK)
     return max(set(sortedK[:k]), key=sortedK[:k].count)
 
 # /start
@@ -107,6 +109,7 @@ def handleImage(update, context):
 
     # ekstraksi gambar
     img = imgExtraction('image.jpeg')
+    print(img)
 
     # knn
     hasil = predictKNN(3, img)
