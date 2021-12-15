@@ -4,6 +4,7 @@ import cv2
 import math
 import pandas as pd
 import env
+import json
 from glcm import glcm
 
 df = pd.read_excel("extraction.xlsx")
@@ -60,7 +61,6 @@ def predictKNN(k, attributes) :
         ed.append(math.sqrt(res))
         res = 0
     sortedK = [ed for y, ed in sorted(zip(ed, y))]
-    print(sortedK)
     return max(set(sortedK[:k]), key=sortedK[:k].count)
 
 # /start
@@ -68,25 +68,44 @@ def start(update, context):
     update.message.reply_text("Selamat Datang \nSilahkan gunakan command di bawah : " +
                               "\n/start untuk memulai bot" +
                               "\n/help untuk melihat command yang ada" +
-                              "\n/kelembapan untuk mengecek kelembapan tanah" +
+                              "\n/kelembapantanah untuk mengecek kelembapan tanah" +
+                              "\n/suhuruangan untuk mengecek suhu ruangan" +
+                              "\n/kelembapanruangan untuk mengecek kelembapan ruangan" +
+                              "\n/indexpanas untuk mengecek index panas ruangan" +
                               "\nkirim gambar untuk mendeteksi kandungan unsur hara")
 
 
 # /help
 def help(update, context):
     update.message.reply_text("command yang tersedia adalah : " +
-                              "\n /start untuk memulai bot" +
+                              "\n/start untuk memulai bot" +
                               "\n/help untuk melihat command yang ada" +
-                              "\n/kelembapan untuk mengecek kelembapan tanah" +
+                              "\n/kelembapantanah untuk mengecek kelembapan tanah" +
+                              "\n/suhuruangan untuk mengecek suhu ruangan" +
+                              "\n/kelembapanruangan untuk mengecek kelembapan ruangan" +
+                              "\n/indexpanas untuk mengecek index panas ruangan" +
                               "\nkirim gambar untuk mendeteksi kandungan unsur hara")
 
 
 def soilMoisture(update, context):
-    with open('store.txt') as txt:
-        content = txt.readlines()
-    txt.close()
-    for v in content:
-        update.message.reply_text("kelembapan : "+v+"%")
+    with open('store.json') as file:
+        data = json.load(file)
+    update.message.reply_text("kelembapan tanah : "+str(data["kelembapan tanah"])+"%")
+
+def roomTemperature(update, context):
+    with open('store.json') as file:
+        data = json.load(file)
+    update.message.reply_text("suhu ruangan : "+str(data["suhu ruangan"])+"°C")
+
+def roomMoisture(update, context):
+    with open('store.json') as file:
+        data = json.load(file)
+    update.message.reply_text("kelembapan ruangan : "+str(data["kelembapan ruangan"])+"%")
+
+def heatIndex(update, context):
+    with open('store.json') as file:
+        data = json.load(file)
+    update.message.reply_text("index panas ruangan : "+str(data["index panas"])+"°C")
 
 
 # for handle a message
@@ -109,7 +128,6 @@ def handleImage(update, context):
 
     # ekstraksi gambar
     img = imgExtraction('image.jpeg')
-    print(img)
 
     # knn
     hasil = predictKNN(3, img)
@@ -131,10 +149,14 @@ def main():
     # for command
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
-    dp.add_handler(CommandHandler("kelembapan", soilMoisture))
+    dp.add_handler(CommandHandler("kelembapantanah", soilMoisture))
+    dp.add_handler(CommandHandler("suhuruangan", roomTemperature))
+    dp.add_handler(CommandHandler("kelembapanruangan", roomMoisture))
+    dp.add_handler(CommandHandler("indexpanas", heatIndex))
 
     # for message
     dp.add_handler(MessageHandler(Filters.text, handleMessage))
+    #gambar
     dp.add_handler(MessageHandler(Filters.photo, handleImage))
     dp.add_handler(MessageHandler(Filters.document.image, handleImage))
 
