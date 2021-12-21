@@ -118,7 +118,7 @@ def allStatus(update, context):
                               "\nkelembapan ruangan : "+str(data["kelembapan ruangan"])+"%" +
                               "\nindex panas ruangan : " +
                               str(data["index panas"])+"°C"
-                              "\npompa sedang " + "" if str(data["siram"]) else "tidak " + "menyiram")
+                              "\npompa sedang " + ("" if data["siram"] else "tidak ") + "menyiram")
 
 # /start
 
