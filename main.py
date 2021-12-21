@@ -22,7 +22,8 @@ allCommand = ("\n/start untuk memulai bot" +
               "\n/indexpanas untuk mengecek index panas ruangan" +
               "\n/statuspenyiraman untuk mengecek apakah penyiraman sedang berlangsung" +
               "\n/ceksemua untuk mengecek semua sensor" +
-              "\nkirim gambar untuk mendeteksi kandungan unsur hara")
+              "\nkirim gambar untuk mendeteksi kandungan unsur hara"+
+              "\n(gambar yang dikirim background harus memiliki background putih dan memilikin pencahayaan yang cukup)")
 
 
 def croppingImage(path):
