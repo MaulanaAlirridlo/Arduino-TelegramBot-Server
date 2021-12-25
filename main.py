@@ -23,7 +23,8 @@ allCommand = ("\n/start untuk memulai bot" +
               "\n/statuspenyiraman untuk mengecek apakah penyiraman sedang berlangsung" +
               "\n/ceksemua untuk mengecek semua sensor" +
               "\nkirim gambar untuk mendeteksi kandungan unsur hara"+
-              "\n(gambar yang dikirim background harus memiliki background putih dan memilikin pencahayaan yang cukup)")
+              "\n(gambar yang dikirim background harus memiliki background putih dan memilikin pencahayaan yang cukup)"+
+              "\n\n**Peringatan : Saat pompa sedang menyiram, nilai sensor yang ditampilkan merupakan nilai saat pompa dinyalakan**")
 
 
 def croppingImage(path):
