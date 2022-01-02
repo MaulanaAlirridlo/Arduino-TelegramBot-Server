@@ -26,6 +26,14 @@ allCommand = ("\n/start untuk memulai bot" +
               "\n(gambar yang dikirim background harus memiliki background putih dan memilikin pencahayaan yang cukup)"+
               "\n\n**Peringatan : Saat pompa sedang menyiram, nilai sensor yang ditampilkan merupakan nilai saat pompa dinyalakan**")
 
+def calculate_rank(arr):
+    a = {}
+    rank = 1
+    for num in sorted(arr):
+        if num not in a:
+            a[num] = rank
+            rank = rank+1
+    return [a[i] for i in arr]
 
 def croppingImage(path):
     # Read image
@@ -64,7 +72,6 @@ def imgExtraction(path):
             g135['idm'], g0['entropi'], g45['entropi'], g90['entropi'], g135['entropi'], g0['korelasi'],
             g45['korelasi'], g90['korelasi'], g135['korelasi']]
 
-
 def predictKNN(k, attributes):
     ed = []
     res = 0
@@ -73,8 +80,9 @@ def predictKNN(k, attributes):
             res += ((v[i]-attributes[i])**2)
         ed.append(math.sqrt(res))
         res = 0
-    sortedK = [ed for y, ed in sorted(zip(ed, y))]
-    return max(set(sortedK[:k]), key=sortedK[:k].count)
+    rank = calculate_rank(ed)
+    selected = [y for rank, y in zip(rank, y) if rank <= k]
+    return max(set(selected[:k]), key=selected[:k].count)
 
 
 def soilMoisture(update, context):
